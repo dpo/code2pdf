@@ -1,7 +1,4 @@
 class ConvertToPDF
-  PDF_OPTIONS = {
-    page_size: 'A4'
-  }.freeze
 
   def initialize(params = {})
     if !params.key?(:from) || params[:from].nil?
@@ -30,7 +27,7 @@ class ConvertToPDF
   def pdf
     html ||= ''
 
-    style = 'size: 12px; font-family: Helvetica, sans-serif;'
+    style = 'font-size: 12px; font-family: Courier'
 
     read_files.each do |file|
       html += "<strong style='#{style}'>File: #{file.first}</strong></br></br>"
@@ -38,7 +35,19 @@ class ConvertToPDF
       html += add_space(30)
     end
 
-    @kit = PDFKit.new(html, page_size: 'A4')
+    PDFKit.configure do |config|
+    config.default_options = {
+        page_size: 'Letter',
+        print_media_type: true,
+        dpi: 400,
+        margin_top: '0.5in',
+        margin_left: '0.5in',
+        margin_bottom: '0.5in',
+        margin_right: '0.5in'
+    }
+    end
+
+    @kit = PDFKit.new(html)
     @kit
   end
 
@@ -47,7 +56,7 @@ class ConvertToPDF
     file_lexer = Rouge::Lexer.find(file_type)
     return file.last unless file_lexer
 
-    theme = Rouge::Themes::Base16.mode(:light)
+    theme = Rouge::Themes::Github  #.mode(:light)
     formatter = Rouge::Formatters::HTMLInline.new(theme)
     formatter = Rouge::Formatters::HTMLTable.new(formatter, start_line: 1)
     formatter.format(file_lexer.lex(file.last))
