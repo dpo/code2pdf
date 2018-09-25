@@ -40,6 +40,7 @@ class ConvertToPDF
         page_size: 'Letter',
         print_media_type: true,
         dpi: 400,
+        encoding: 'UTF-8',
         margin_top: '0.5in',
         margin_left: '0.5in',
         margin_bottom: '0.5in',
