@@ -33,7 +33,12 @@ rescue OptionParser::InvalidOption => exception
 end
 
 PATH = ARGV[0].gsub(/\/$/, '')
+if ARGV.size == 1
+  NAME = "_.pdf"
+else
+  NAME = ARGV[1].gsub(/\/$/, '')
+end
 BLACK_LIST_YAML_FILE = "#{PATH}/.code2pdf".freeze
 
-filename = "#{PATH.gsub(/(\.|\/)/, '_')}.pdf"
+filename = "#{PATH.gsub(/(\.|\/)/, NAME)}"
 ConvertToPDF.new from: PATH, to: filename, except: BLACK_LIST_YAML_FILE
